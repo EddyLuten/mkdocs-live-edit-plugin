@@ -1,0 +1,11 @@
+LICENSE.md
+README.md
+setup.py
+live/__init__.py
+live/plugin.py
+mkdocs_live_edit_plugin.egg-info/PKG-INFO
+mkdocs_live_edit_plugin.egg-info/SOURCES.txt
+mkdocs_live_edit_plugin.egg-info/dependency_links.txt
+mkdocs_live_edit_plugin.egg-info/entry_points.txt
+mkdocs_live_edit_plugin.egg-info/requires.txt
+mkdocs_live_edit_plugin.egg-info/top_level.txt
