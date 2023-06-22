@@ -4,7 +4,11 @@
 
 An MkDocs plugin that allows editing pages directly from the browser.
 
-THIS IS A WORK IN PROGRESS -- DONT USE THIS YET
+THIS IS A WORK IN PROGRESS -- DON'T USE THIS YET
+
+## TODO
+
+- Creating new pages
 
 ## Installation
 

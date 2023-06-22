@@ -1,67 +1,111 @@
 .live-edit-hidden {
-    display: none;
+  display: none;
 }
 
 .live-edit-source {
-    width: 100%;
-    height: 50vh;
-    /** make it readable **/
-    font-family: monospace;
-    font-size: .8rem;
-    line-height: 1.5;
-    color: #333;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    padding: 5px 10px;
-    margin: 0 5px;
-    outline: none;
-    /** make it editable **/
-    -moz-tab-size: 4;
-    -o-tab-size: 4;
-    tab-size: 4;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    word-break: break-all;
-    overflow: auto;
-    /** make it pretty **/
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
-    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
-    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+  width: 100%;
+  height: 50vh;
+  resize: vertical;
+  /** make it readable **/
+  font-family: monospace;
+  font-size: .8rem;
+  line-height: 1.5;
+  color: #333;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin: 5px;
+  outline: none;
+  /** make it editable **/
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  /* don't break words */
+  word-break: keep-all;
+  white-space: pre-wrap;
+  overflow: auto;
+  /** make it pretty **/
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
 }
 
 button.live-edit-pencil-button {
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    font-size: .8rem;
-    display: inline;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-size: .8rem;
+  display: inline;
 }
 
 button.live-edit-button {
-    cursor: pointer;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    padding: 5px 10px;
-    margin: 0 5px;
-    font-size: .8rem;
-    line-height: 1.5;
-    color: #333;
-    outline: none;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin: 0 5px;
+  font-size: .8rem;
+  line-height: 1.5;
+  color: #333;
+  outline: none;
 }
 
 button.live-edit-save-button {
-    background: #5cb85c;
-    border-color: #4cae4c;
-    color: #fff;
+  background: #5cb85c;
+  border-color: #4cae4c;
+  color: #fff;
 }
 
 button.live-edit-cancel-button {
-    background: #d9534f;
-    border-color: #d43f3a;
-    color: #fff;
+  background: #d9534f;
+  border-color: #d43f3a;
+  color: #fff;
+}
+
+div.live-edit-controls {
+  background-color: #fff2dc;
+  border: 1px solid #f0c36d;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin: 10px 0;
+  font-size: .8rem;
+  line-height: 1.5;
+  width: 100%;
+}
+
+.live-edit-label {
+  display: inline-block;
+  text-align: right;
+  margin-right: 10px;
+  font-size: .8rem;
+}
+
+.live-edit-modal {
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 10px;
+  font-size: .8rem;
+  line-height: 1.5;
+  text-align: center;
+  /* drop a shadow */
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, .5);
+}
+
+.live-edit-modal::backdrop {
+  background: rgba(0, 0, 0, 0.378);
+}
+
+.live-edit-info-modal {
+  background-color: #fff2dc;
+  border: 1px solid #f0c36d;
+}
+
+.live-edit-error-message-dialog {
+  background-color: #ffdcdc;
+  border: 1px solid #f06d6d;
 }
