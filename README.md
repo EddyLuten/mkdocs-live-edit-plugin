@@ -17,6 +17,11 @@ Some basic editor shortcuts available while editing:
 - Alt+S/Opt+S toggles your selection to be ~~Strikethrough~~
 - Ctrl+S/Cmd+S to save your changes
 
+If you enjoy this plugin, you may also like these other MkDocs plugins:
+
+- [mkdocs-alias-plugin](https://github.com/EddyLuten/mkdocs-alias-plugin)
+- [mkdocs-categories-plugin](https://github.com/EddyLuten/mkdocs-categories-plugin)
+
 ## Installation
 
 Using Python 3.10 or greater, install the package using pip:
