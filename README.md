@@ -62,6 +62,6 @@ A similar mechanism is in place for other operations like renaming and deleting.
 
 ## Changelog
 
-### 0.1.0 / 0.1.1
+### 0.1.0
 
 Initial release with editing, renaming, and deletion logic in place.
