@@ -7,9 +7,8 @@ long_description = (this_directory / 'README.md').read_text()
 
 setup(
     name='mkdocs-live-edit-plugin',
-    version='0.1.1',
-    description=
-    'An MkDocs plugin that allows editing pages directly from the browser.',
+    version='0.1.2',
+    description='An MkDocs plugin that allows editing pages directly from the browser.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords='mkdocs python markdown editing authoring wiki server',
@@ -32,5 +31,6 @@ setup(
     entry_points={
         'mkdocs.plugins': ['live-edit = live.plugin:LiveEditPlugin']
     },
+    data_files=[('live', ['live/live-edit.js', 'live/live-edit.css'])],
     include_package_data=True,
 )
