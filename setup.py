@@ -19,7 +19,8 @@ setup(
     license='MIT',
     python_requires='>=3.10',
     install_requires=[
-        'mkdocs'
+        'mkdocs',
+        'websockets',
     ],
     classifiers=[
         'License :: OSI Approved :: MIT License',

@@ -21,12 +21,12 @@
   }
 
   const showError = function (message) {
-    errorMessageDialog.textContent = message;
+    errorMessageDialog.innerHTML = message;
     errorMessageDialog.showModal();
   }
 
   const showInfo = function (message) {
-    infoModal.textContent = message;
+    infoModal.innerHTML = message;
     infoModal.showModal();
   }
 
@@ -56,7 +56,9 @@
     if (data.success) {
       page_path = data.new_path;
       editButton.disabled = false;
-      showInfo(`Waiting on a MkDocs redirect to ${data.new_url}...`);
+      showInfo(
+        `Waiting on MkDocs to rebuild and redirect to: ${data.new_url}`
+      );
     } else {
       showError(data.error);
     }
@@ -96,6 +98,53 @@
     editSource = document.createElement('textarea');
     editSource.innerHTML = data.contents;
     editSource.className = 'live-edit-source';
+    editSource.addEventListener('keydown', function (e) {
+      const toggleSurroundWithTag = function (tag) {
+        e.preventDefault();
+        let start = editSource.selectionStart;
+        let end = editSource.selectionEnd;
+        let text = editSource.value;
+        let selectedText = text.substring(start, end);
+        let beforeText = text.substring(0, start);
+        let afterText = text.substring(end, text.length);
+        // text is already surrounded by the tag, remove it.
+        if (beforeText.endsWith(tag) && afterText.startsWith(tag)) {
+          beforeText = beforeText.substring(0, beforeText.length - tag.length);
+          afterText = afterText.substring(tag.length, afterText.length);
+          editSource.value = beforeText + selectedText + afterText;
+          editSource.selectionStart = start - tag.length;
+          editSource.selectionEnd = end - tag.length;
+        } else if (selectedText.startsWith(tag) && selectedText.endsWith(tag)) {
+          // selection includes the tag, remove it.
+          selectedText = selectedText.substring(tag.length, selectedText.length - tag.length);
+          editSource.value = beforeText + selectedText + afterText;
+          editSource.selectionStart = start;
+          editSource.selectionEnd = end - tag.length * 2;
+        } else {
+          // selection does not include the tag, add it.
+          editSource.value = beforeText + tag + selectedText + tag + afterText;
+          editSource.selectionStart = start + tag.length;
+          editSource.selectionEnd = end + tag.length;
+        }
+      }
+      // bold on ctrl+b
+      if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+        toggleSurroundWithTag('**');
+      }
+      // italic on ctrl+i
+      if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
+        toggleSurroundWithTag('_');
+      }
+      // strike on alt+s
+      if (e.altKey && e.key === 's') {
+        toggleSurroundWithTag('~~');
+      }
+      // save on ctrl+s
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        saveButton.click();
+      }
+    });
     // add a save button
     saveButton = document.createElement('button');
     saveButton.innerHTML = 'Save';
@@ -107,7 +156,10 @@
     cancelButton.innerHTML = 'Cancel';
     cancelButton.classList.add('live-edit-button');
     cancelButton.classList.add('live-edit-cancel-button');
-    cancelButton.addEventListener('click', exitEditMode);
+    cancelButton.addEventListener('click', () => {
+      exitEditMode();
+      editSource.value = data.contents; // reset the contents
+    });
     // add the textbox to the controls
     controls.appendChild(editSource);
     // add the save button after the textbox
@@ -126,22 +178,21 @@
   }
 
   const renamePage = function () {
-    let new_path = prompt(
-      'Enter a new path for this page',
-      page_path,
+    let new_filename = prompt(
+      'Enter a new filename for this page',
+      page_filename
     );
-    if (new_path === page_path) {
-      return showError('The new path cannot be the same as the current path');
+    if (!new_filename) return;
+    if (new_filename === page_filename) {
+      return showError(
+        'The new filename cannot be the same as the current filename'
+      );
     }
-    if (new_path) {
-      ws.send(JSON.stringify({
-        'action': 'rename_file',
-        'path': page_path,
-        'new_path': new_path,
-      }));
-    } else {
-      return showError('The new path cannot be empty');
-    }
+    ws.send(JSON.stringify({
+      'action': 'rename_file',
+      'path': page_path,
+      'new_filename': new_filename,
+    }));
   }
 
   const addEditButton = function () {

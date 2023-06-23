@@ -5,6 +5,7 @@ An MkDocs plugin allowing for editing the wiki directly from the browser.
 
 import asyncio
 import json
+import os
 import string
 import threading
 from logging import Logger, getLogger
@@ -67,16 +68,17 @@ class LiveEditPlugin(BasePlugin):
         with open(Path(self.mkdocs_config['docs_dir']) / path, 'w', encoding='utf-8') as file:
             file.write(contents)
 
-    def rename_file(self, old_path: str, new_path: str) -> str:
+    def rename_file(self, old_filepath: str, new_filename: str) -> str:
         """Renames a file on the filesystem."""
         try:
             cfg = self.mkdocs_config
             if cfg['docs_dir'] is None:
                 raise TypeError('docs_dir is None')
             docs_dir = Path(cfg['docs_dir'])
-            (docs_dir / old_path).rename(docs_dir / new_path)
+            old_path = docs_dir / old_filepath
+            new_path = old_path.rename(old_path.parent / new_filename)
             new_page = Page(None, File(
-                new_path,
+                str(new_path.relative_to(docs_dir)),
                 cfg['docs_dir'],
                 cfg['site_dir'],
                 cfg['use_directory_urls']
@@ -84,8 +86,8 @@ class LiveEditPlugin(BasePlugin):
             self.new_url = new_page.canonical_url
             return json.dumps({
                 'action':   'rename_file',
-                'old_path': old_path,
-                'new_path': new_path,
+                'old_path': str(old_path),
+                'new_path': str(new_path),
                 'success':  True,
                 'new_url':  self.new_url
             })
@@ -98,8 +100,6 @@ class LiveEditPlugin(BasePlugin):
             )
             return json.dumps({
                 'action':   'rename_file',
-                'old_path': old_path,
-                'new_path': new_path,
                 'success':  False,
                 'error':    str(error)
             })
@@ -174,7 +174,10 @@ class LiveEditPlugin(BasePlugin):
                     )
                 case 'rename_file':
                     await websocket.send(
-                        self.rename_file(message['path'], message['new_path'])
+                        self.rename_file(
+                            message['path'],
+                            message['new_filename']
+                        )
                     )
                 case 'delete_file':
                     await websocket.send(
@@ -250,9 +253,11 @@ class LiveEditPlugin(BasePlugin):
         """Injects the live-edit script into the page."""
         if not self.is_serving:
             return html
+        basename = os.path.basename(Path(page.file.src_path))
         css = f'<style>{self.css_contents}</style>'
         preamble = (
             f"const ws_port = {self.config['websockets_port']};\n"
             f"let page_path = '{page.file.src_path}';\n"
+            f"let page_filename = '{basename}';\n"
         )
         return f'{css}\n{html}<script>{preamble}\n{self.js_contents}</script>'

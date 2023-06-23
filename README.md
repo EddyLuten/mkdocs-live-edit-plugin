@@ -1,14 +1,21 @@
 # mkdocs-live-edit-plugin
 
-<!-- [![PyPI version](https://badge.fury.io/py/mkdocs-live-edit-plugin.svg)](https://pypi.org/project/mkdocs-live-edit-plugin/)  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![example workflow](https://github.com/eddyluten/mkdocs-live-edit-plugin/actions/workflows/pylint.yml/badge.svg) [![Downloads](https://pepy.tech/badge/mkdocs-live-edit-plugin)](https://pepy.tech/project/mkdocs-live-edit-plugin) -->
+[![PyPI version](https://badge.fury.io/py/mkdocs-live-edit-plugin.svg)](https://pypi.org/project/mkdocs-live-edit-plugin/)  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![example workflow](https://github.com/eddyluten/mkdocs-live-edit-plugin/actions/workflows/pylint.yml/badge.svg) [![Downloads](https://pepy.tech/badge/mkdocs-live-edit-plugin)](https://pepy.tech/project/mkdocs-live-edit-plugin)
 
 An MkDocs plugin that allows editing pages directly from the browser.
 
-THIS IS A WORK IN PROGRESS -- DON'T USE THIS YET
+Things you can do with this plugin when running via `mkdocs serve`:
 
-## TODO
+- Editing a page's Markdown source from the page itself.
+- Renaming a page's filename
+- Deleting a page
 
-- Creating new pages
+Some basic editor shortcuts available while editing:
+
+- Ctrl+B/Cmd+B toggles your selection to be **Bold**
+- Ctrl+I/Cmd+I toggles your selection to be _Italic_
+- Alt+S/Opt+S toggles your selection to be ~~Strikethrough~~
+- Ctrl+S/Cmd+S to save your changes
 
 ## Installation
 
@@ -27,8 +34,29 @@ plugins:
 
 ## Usage
 
-TODO
+[![A video showing how to use v0.1.0](https://img.youtube.com/vi/8aUToGfXGVA/0.jpg)](https://www.youtube.com/watch?v=8aUToGfXGVA)
+
+## TODO
+
+- Creating new pages (not sure how picking directories would work)
+- Moving pages (also not sure about handling directories here)
+- Integration with [mkdocs-categories-plugin](https://github.com/EddyLuten/mkdocs-categories-plugin)
+- Integration with [mkdocs-alias-plugin](https://github.com/EddyLuten/mkdocs-alias-plugin)
+
+## How Does it Work?
+
+The short answer: [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) handle client-server communication, while MkDocs handles reloading when files change.
+
+### The Longer Answer
+
+Once installed, when running your local live-reload server, the plugin registers a separate WebSockets server that runs on a specified port. Once your wiki is built, a WebSockets client is installed in your browser, allowing for asynchronous communication between the two.
+
+When you edit the contents of a file, they are sent to the server via WebSockets where the plugin writes the contents to disk. Here, MkDocs picks up on the change and sends a reload signal back to the browser -- this is the same live-reload mechanism that picks up on changes you make via a text editor.
+
+A similar mechanism is in place for other operations like renaming and deleting.
+
+## Changelog
 
 ### 0.1.0
 
-Initial release with all of the base logic in place.
+Initial release with editing, renaming, and deletion logic in place.
