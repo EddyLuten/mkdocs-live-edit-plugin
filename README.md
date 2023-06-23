@@ -17,10 +17,8 @@ Some basic editor shortcuts available while editing:
 - Alt+S/Opt+S toggles your selection to be ~~Strikethrough~~
 - Ctrl+S/Cmd+S to save your changes
 
-If you enjoy this plugin, you may also like these other MkDocs plugins:
 
-- [mkdocs-alias-plugin](https://github.com/EddyLuten/mkdocs-alias-plugin)
-- [mkdocs-categories-plugin](https://github.com/EddyLuten/mkdocs-categories-plugin)
+If you like this plugin, you'll probably also like [mkdocs-categories-plugin](https://github.com/EddyLuten/mkdocs-categories-plugin) and [mkdocs-alias-plugin](https://github.com/EddyLuten/mkdocs-alias-plugin).
 
 ## Installation
 
