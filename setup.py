@@ -31,4 +31,6 @@ setup(
     packages=find_packages(exclude=['*.tests']),
     entry_points={
         'mkdocs.plugins': ['live-edit = live.plugin:LiveEditPlugin']
-    })
+    },
+    include_package_data=True,
+)
