@@ -1,5 +1,5 @@
 (function () {
-  const ws = new WebSocket(`ws://localhost:${ws_port}`);
+  const ws = new WebSocket(`ws://${window.location.hostname}:${ws_port}`);
 
   let
     editButton,

@@ -17,7 +17,6 @@ Some basic editor shortcuts available while editing:
 - Alt+S/Opt+S toggles your selection to be ~~Strikethrough~~
 - Ctrl+S/Cmd+S to save your changes
 
-
 If you like this plugin, you'll probably also like [mkdocs-categories-plugin](https://github.com/EddyLuten/mkdocs-categories-plugin) and [mkdocs-alias-plugin](https://github.com/EddyLuten/mkdocs-alias-plugin).
 
 ## Installation
@@ -59,6 +58,18 @@ When you edit the contents of a file, they are sent to the server via WebSockets
 A similar mechanism is in place for other operations like renaming and deleting.
 
 ## Changelog
+
+### 0.1.3
+
+Bug fix: The WebSocket connection now honors the hostname as supplied by the browser in `window.location.hostname`.
+
+### 0.1.2
+
+Bug fix: include missing data files
+
+### 0.1.1
+
+Bug fix: include non-python files in the package
 
 ### 0.1.0
 
