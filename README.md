@@ -38,6 +38,14 @@ plugins:
 
 [![A video showing how to use v0.1.0](https://img.youtube.com/vi/8aUToGfXGVA/0.jpg)](https://www.youtube.com/watch?v=8aUToGfXGVA)
 
+If for any reason you want to override the port that the Live Edit WebSocket is operating on, you can do so by setting the `websockets_port` option for the `live-edit` plugin, like so:
+
+```yml
+plugins:
+  - live-edit:
+      websockets_port: 9999 # or any other port you want
+```
+
 ## TODO
 
 - Creating new pages (not sure how picking directories would work)
@@ -58,6 +66,10 @@ When you edit the contents of a file, they are sent to the server via WebSockets
 A similar mechanism is in place for other operations like renaming and deleting.
 
 ## Changelog
+
+### 0.1.4
+
+Bug fix: Improved WebSocket connectivity and error handling. Updated the documentation to match.
 
 ### 0.1.3
 

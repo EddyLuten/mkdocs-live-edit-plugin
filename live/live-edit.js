@@ -1,7 +1,33 @@
-(function () {
-  const ws = new WebSocket(`ws://${window.location.hostname}:${ws_port}`);
+// connect to the specified websocket server. retry 3 times with a 1 second delay
+function websocket_connect(hostname, port) {
+  return new Promise(function (resolve, reject) {
+    const totalTries = 3;
+    let tries = totalTries;
+    const url = `ws://${hostname}:${port}`;
+    const getws = function () {
+      if (tries <= 0) {
+        reject('Failed to connect to the live-edit server');
+        return;
+      }
+      --tries;
+      console.log(`Connecting to live-edit server (try ${totalTries - tries} of ${totalTries})...`);
+      let ws = new WebSocket(url);
+      ws.onopen = () => resolve(ws);
+      ws.addEventListener('error', () => {
+        setTimeout(() => getws(), 1000);
+      });
+    };
+    getws();
+  });
+};
 
+(function () {
   let
+    ws = undefined,
+    wsConnected = websocket_connect(window.location.hostname, ws_port),
+    domLoaded = new Promise(function (resolve) {
+      document.addEventListener('DOMContentLoaded', resolve);
+    }),
     editButton,
     editSource,
     saveButton,
@@ -10,15 +36,29 @@
     infoModal,
     errorMessageDialog;
 
-  ws.onmessage = function (e) {
-    let data = JSON.parse(e.data);
-    switch (data.action) {
-      case 'get_contents': onPageContentsReceived(data); break;
-      case 'set_contents': onSavePageContentsReceived(data); break;
-      case 'rename_file': onRenamePageReceived(data); break;
-      case 'delete_file': onDeletePageReceived(data); break;
-    }
-  }
+  domLoaded.then(() => {
+    wsConnected
+      .then(wso => {
+        console.info('Connected to live-edit server');
+        ws = wso;
+        ws.onmessage = function (e) {
+          let data = JSON.parse(e.data);
+          switch (data.action) {
+            case 'connected': initialize(data.message); break;
+            case 'get_contents': onPageContentsReceived(data); break;
+            case 'set_contents': onSavePageContentsReceived(data); break;
+            case 'rename_file': onRenamePageReceived(data); break;
+            case 'delete_file': onDeletePageReceived(data); break;
+          }
+        };
+      })
+      .catch(e => {
+        showErrorMessage(
+          `Failed to connect to the live-edit server after several attempts.`
+        );
+        console.error(e);
+      });
+  });
 
   const showError = function (message) {
     errorMessageDialog.innerHTML = message;
@@ -254,25 +294,47 @@
     document.body.appendChild(errorMessageDialog);
   }
 
-  const initialize = function () {
-    controls = document.createElement('div');
-    controls.className = 'live-edit-controls';
-    // add a label to the controls
-    label = document.createElement('span');
-    label.innerHTML = 'Live Edit:';
-    label.className = 'live-edit-label';
-    controls.appendChild(label);
-    // add the controls to the page after the H1
-    let article = document.querySelector('article');
-    if (article) {
-      article.prepend(controls);
-      addEditButton();
-      addRenameButton();
-      addDeleteButton();
-      addInfoModal();
-      addErrorMessageDialog();
+  const showErrorMessage = function (message) {
+    if (!controls) {
+      controls = document.createElement('div');
+      controls.className = 'live-edit-controls';
+      // add a label to the controls
+      label = document.createElement('span');
+      label.innerHTML = 'Live Edit:';
+      label.className = 'live-edit-label';
+      controls.appendChild(label);
+      let article = document.querySelector('article');
+      if (article) {
+        article.prepend(controls);
+      }
     }
-  };
+    label.innerHTML = `Live Edit: ${message}`;
+  }
 
-  document.addEventListener('DOMContentLoaded', initialize);
+  const initialize = function (message) {
+    console.info(message);
+    domLoaded
+      .then(() => {
+        controls = document.createElement('div');
+        controls.className = 'live-edit-controls';
+        // add a label to the controls
+        label = document.createElement('span');
+        label.innerHTML = 'Live Edit:';
+        label.className = 'live-edit-label';
+        controls.appendChild(label);
+        // add the controls to the page after the H1
+        let article = document.querySelector('article');
+        if (article) {
+          article.prepend(controls);
+          addEditButton();
+          addRenameButton();
+          addDeleteButton();
+          addInfoModal();
+          addErrorMessageDialog();
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
 })();

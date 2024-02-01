@@ -39,6 +39,7 @@ class LiveEditPlugin(BasePlugin):
     """
     config_scheme = (
         ('websockets_port', config_options.Type(int, default=8484)),
+        ('websockets_timeout', config_options.Type(int, default=10)),
     )
     log: Logger = getLogger(f'mkdocs.plugins.{__name__}')
     server_thread: Optional[threading.Thread] = None
@@ -158,8 +159,20 @@ class LiveEditPlugin(BasePlugin):
     ):
         """The websocket receiver coroutine."""
         self.log.info('live-edit websocket connected')
+        await websocket.send(json.dumps({
+            'action':   'connected',
+            'message':  'live-edit websocket server connected'
+        }))
         while True:
-            message = json.loads(await websocket.recv())
+            message = None
+            try:
+                message = json.loads(await websocket.recv())
+            except websockets.exceptions.ConnectionClosedOK:
+                self.log.info('live-edit websocket disconnected with status OK')
+                break
+            except websockets.exceptions.ConnectionClosedError:
+                self.log.info('live-edit websocket disconnected due to an error')
+                break
             match message['action']:
                 case 'get_contents':
                     await websocket.send(
