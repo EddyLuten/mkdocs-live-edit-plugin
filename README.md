@@ -67,6 +67,10 @@ A similar mechanism is in place for other operations like renaming and deleting.
 
 ## Changelog
 
+### 0.1.5
+
+Bug fix: fixes an issue where the WebSocket connection would host on localhost over IPv6. See [#3](https://github.com/EddyLuten/mkdocs-live-edit-plugin/issues/3) for context.
+
 ### 0.1.4
 
 Bug fix: Improved WebSocket connectivity and error handling. Updated the documentation to match.
