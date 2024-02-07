@@ -206,7 +206,7 @@ class LiveEditPlugin(BasePlugin):
         """The event loop of the websocket server."""
         async with serve(
             self.websocket_receiver,
-            "localhost",
+            "127.0.0.1",
             self.config['websockets_port']
         ):
             self.log.info(
