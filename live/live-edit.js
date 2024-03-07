@@ -49,6 +49,7 @@ function websocket_connect(hostname, port) {
             case 'set_contents': onSavePageContentsReceived(data); break;
             case 'rename_file': onRenamePageReceived(data); break;
             case 'delete_file': onDeletePageReceived(data); break;
+            case 'redirect': onRedirectReceived(data); break;
           }
         };
       })
@@ -59,6 +60,10 @@ function websocket_connect(hostname, port) {
         console.error(e);
       });
   });
+
+  const sendJson = function (data) {
+    ws.send(JSON.stringify(data));
+  }
 
   const showError = function (message) {
     errorMessageDialog.innerHTML = message;
@@ -82,6 +87,13 @@ function websocket_connect(hostname, port) {
     editSource.classList.add('live-edit-hidden');
     saveButton.classList.add('live-edit-hidden');
     cancelButton.classList.add('live-edit-hidden');
+  }
+
+  const onRedirectReceived = function (data) {
+    if (data.new_url) {
+      showInfo(`Redirecting to: ${data.new_url}`);
+      window.location.href = data.new_url;
+    }
   }
 
   const onDeletePageReceived = function (data) {
@@ -211,10 +223,10 @@ function websocket_connect(hostname, port) {
 
   const editPage = function () {
     editButton.disabled = true;
-    ws.send(JSON.stringify({
+    sendJson({
       'action': 'get_contents',
       'path': page_path,
-    }));
+    });
   }
 
   const renamePage = function () {
@@ -228,11 +240,40 @@ function websocket_connect(hostname, port) {
         'The new filename cannot be the same as the current filename'
       );
     }
-    ws.send(JSON.stringify({
+    sendJson({
       'action': 'rename_file',
       'path': page_path,
       'new_filename': new_filename,
-    }));
+    });
+  }
+
+  const newPage = function () {
+    let new_filename = prompt(
+      'Enter a filename for the new page. If the parent directory structure ' +
+      'does not exist, it will be created.',
+      page_base_path + '/untitled.md'
+    );
+    if (!new_filename) return;
+    let new_title = prompt(
+      'Enter a title for the new page',
+      'Untitled'
+    );
+    if (!new_filename) return;
+    sendJson({
+      'action': 'new_file',
+      'path': new_filename,
+      'title': new_title,
+    });
+  }
+
+  const addNewButton = function () {
+    // add a button
+    newButton = document.createElement('button');
+    newButton.innerHTML = '📄 New';
+    newButton.className = 'live-edit-button align-right';
+    newButton.title = 'Create a new page';
+    newButton.addEventListener('click', newPage);
+    controls.appendChild(newButton);
   }
 
   const addEditButton = function () {
@@ -263,10 +304,10 @@ function websocket_connect(hostname, port) {
     deleteButton.title = 'Delete this page';
     deleteButton.addEventListener('click', function () {
       if (confirm('Are you sure you want to delete this page?')) {
-        ws.send(JSON.stringify({
+        sendJson({
           'action': 'delete_file',
           'path': page_path,
-        }));
+        });
       }
     });
     controls.appendChild(deleteButton);
@@ -329,9 +370,11 @@ function websocket_connect(hostname, port) {
           addEditButton();
           addRenameButton();
           addDeleteButton();
+          addNewButton();
           addInfoModal();
           addErrorMessageDialog();
         }
+        sendJson({ 'action': 'ready' });
       })
       .catch((e) => {
         console.error(e);

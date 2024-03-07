@@ -2,13 +2,14 @@
 
 [![PyPI version](https://badge.fury.io/py/mkdocs-live-edit-plugin.svg)](https://pypi.org/project/mkdocs-live-edit-plugin/)  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![example workflow](https://github.com/eddyluten/mkdocs-live-edit-plugin/actions/workflows/pylint.yml/badge.svg) [![Downloads](https://pepy.tech/badge/mkdocs-live-edit-plugin)](https://pepy.tech/project/mkdocs-live-edit-plugin)
 
-An MkDocs plugin that allows editing pages directly from the browser.
+mkdocs-live-edit-plugin is an MkDocs plugin that allows editing pages directly from the browser.
 
 Things you can do with this plugin when running via `mkdocs serve`:
 
 - Editing a page's Markdown source from the page itself.
 - Renaming a page's filename
 - Deleting a page
+- Creating a brand new page
 
 Some basic editor shortcuts available while editing:
 
@@ -38,7 +39,7 @@ plugins:
 
 [![A video showing how to use v0.1.0](https://img.youtube.com/vi/8aUToGfXGVA/0.jpg)](https://www.youtube.com/watch?v=8aUToGfXGVA)
 
-If for any reason you want to override the port that the Live Edit WebSocket is operating on, you can do so by setting the `websockets_port` option for the `live-edit` plugin, like so:
+If, for any reason, you want to override the port that the Live Edit WebSocket is operating on, you can do so by setting the `websockets_port` option for the `live-edit` plugin like so:
 
 ```yml
 plugins:
@@ -61,31 +62,35 @@ The short answer: [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/
 
 Once installed, when running your local live-reload server, the plugin registers a separate WebSockets server that runs on a specified port. Once your wiki is built, a WebSockets client is installed in your browser, allowing for asynchronous communication between the two.
 
-When you edit the contents of a file, they are sent to the server via WebSockets where the plugin writes the contents to disk. Here, MkDocs picks up on the change and sends a reload signal back to the browser -- this is the same live-reload mechanism that picks up on changes you make via a text editor.
+When you edit the contents of a file in the browser, they are sent to the server via WebSockets, where the plugin writes the contents to disk. Here, MkDocs picks up on the change and sends a reload signal back to the browser -- this is the same live-reload mechanism that picks up on changes you make via a text editor.
 
 A similar mechanism is in place for other operations like renaming and deleting.
 
 ## Changelog
 
+### 0.2.0
+
+**New Feature:** Creating pages. The plugin now exposes a button that allows you to create a brand new page from any other page.
+
 ### 0.1.5
 
-Bug fix: fixes an issue where the WebSocket connection would host on localhost over IPv6. See [#3](https://github.com/EddyLuten/mkdocs-live-edit-plugin/issues/3) for context.
+**Bug fix:** fixes an issue where the WebSocket connection would host on localhost over IPv6. See [#3](https://github.com/EddyLuten/mkdocs-live-edit-plugin/issues/3) for context.
 
 ### 0.1.4
 
-Bug fix: Improved WebSocket connectivity and error handling. Updated the documentation to match.
+**Bug fix:** Improved WebSocket connectivity and error handling. Updated the documentation to match.
 
 ### 0.1.3
 
-Bug fix: The WebSocket connection now honors the hostname as supplied by the browser in `window.location.hostname`.
+**Bug fix:** The WebSocket connection now honors the hostname as supplied by the browser in `window.location.hostname`.
 
 ### 0.1.2
 
-Bug fix: include missing data files
+**Bug fix:** include missing data files
 
 ### 0.1.1
 
-Bug fix: include non-python files in the package
+**Bug fix:** include non-python files in the package
 
 ### 0.1.0
 

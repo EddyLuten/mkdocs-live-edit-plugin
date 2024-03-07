@@ -55,6 +55,10 @@ button.live-edit-button {
   outline: none;
 }
 
+button.live-edit-button.align-right {
+  float: right;
+}
+
 button.live-edit-save-button {
   background: #5cb85c;
   border-color: #4cae4c;

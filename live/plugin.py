@@ -48,6 +48,10 @@ class LiveEditPlugin(BasePlugin):
     is_serving: bool = False
     mkdocs_config: MkDocsConfig = None
     new_url: str = None
+    new_page: dict = {
+        "created_file": None,
+        "new_url": None,
+    }
 
     def __init__(self):
         """Initializes the plugin."""
@@ -152,6 +156,33 @@ class LiveEditPlugin(BasePlugin):
                 'success':  False,
                 'error':    str(error)
             })
+        
+    def create_new_file(self, path: str, title: str) -> str:
+        """Creates a new file and returns a JSON string describing the result."""
+        try:
+            new_path = Path(self.mkdocs_config['docs_dir']) / path
+            # ensure the parent directory structure exists
+            if not new_path.parent.exists():
+                new_path.parent.mkdir(parents=True)
+            # write the new file
+            with open(new_path, 'w', encoding='utf-8') as file:
+                file.write(f'# {title}\n\nThis page was created by live-edit.')
+            # this new_page is used to redirect the browser to the new page
+            # after the next build is complete
+            self.new_page["created_file"] = new_path
+            return json.dumps({
+                'action':   'new_file',
+                'path':     path,
+                'success':  True
+            })
+        except OSError as error:
+            self.log.error('failed to write: %s: %s', path, error)
+            return json.dumps({
+                'action':   'new_file',
+                'path':     path,
+                'success':  False,
+                'error':    str(error)
+            })
 
     async def websocket_receiver(
         self,
@@ -168,12 +199,33 @@ class LiveEditPlugin(BasePlugin):
             try:
                 message = json.loads(await websocket.recv())
             except websockets.exceptions.ConnectionClosedOK:
-                self.log.info('live-edit websocket disconnected with status OK')
+                self.log.info(
+                    'live-edit websocket disconnected with status OK'
+                )
                 break
             except websockets.exceptions.ConnectionClosedError:
-                self.log.info('live-edit websocket disconnected due to an error')
+                self.log.info(
+                    'live-edit websocket disconnected due to an error'
+                )
                 break
             match message['action']:
+                case 'ready':
+                    if self.new_page["new_url"] is not None:
+                        await websocket.send(
+                            json.dumps({
+                                'action':   'redirect',
+                                'new_url':  self.new_page["new_url"]
+                            })
+                        )
+                        self.new_page["new_url"] = None
+                        self.new_page["created_file"] = None
+                case 'new_file':
+                    await websocket.send(
+                        self.create_new_file(
+                            message['path'],
+                            message['title']
+                        )
+                    )
                 case 'get_contents':
                     await websocket.send(
                         self.get_page_contents(message['path'])
@@ -223,6 +275,16 @@ class LiveEditPlugin(BasePlugin):
     def on_startup(self, *, command: Literal['build', 'gh-deploy', 'serve'], dirty: bool) -> None:
         self.is_serving = command == 'serve'
 
+    def on_pre_page(self, page: Page, *, config: MkDocsConfig, files: Files) -> Page | None:
+        """Here we try to discern the new URL of a page that was just created."""
+        if self.new_page["created_file"] is None or (self.new_page["new_url"] is not None):
+            return page
+        path = Path(self.mkdocs_config['docs_dir']) / page.file.src_path
+        if Path.samefile(path, self.new_page["created_file"]):
+            self.log.info('new page created: %s', page.abs_url)
+            self.new_page["new_url"] = page.abs_url
+        return page
+
     def error_handler(self, server: LiveReloadServer, code: int) -> bytes | None:
         """Handles errors from the server."""
         # did we recently rename a page and get a 404? redirect to the new page
@@ -268,9 +330,11 @@ class LiveEditPlugin(BasePlugin):
             return html
         basename = os.path.basename(Path(page.file.src_path))
         css = f'<style>{self.css_contents}</style>'
+        page_base_path = Path(page.file.src_path).parent
         preamble = (
             f"const ws_port = {self.config['websockets_port']};\n"
             f"let page_path = '{page.file.src_path}';\n"
             f"let page_filename = '{basename}';\n"
+            f"let page_base_path = '{page_base_path}';\n"
         )
         return f'{css}\n{html}<script>{preamble}\n{self.js_contents}</script>'
