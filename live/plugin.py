@@ -156,7 +156,7 @@ class LiveEditPlugin(BasePlugin):
                 'success':  False,
                 'error':    str(error)
             })
-        
+
     def create_new_file(self, path: str, title: str) -> str:
         """Creates a new file and returns a JSON string describing the result."""
         try:
