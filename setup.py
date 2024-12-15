@@ -7,7 +7,7 @@ long_description = (this_directory / 'README.md').read_text()
 
 setup(
     name='mkdocs-live-edit-plugin',
-    version='0.2.0',
+    version='0.2.1',
     description='An MkDocs plugin that allows editing pages directly from the browser.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -19,7 +19,7 @@ setup(
     python_requires='>=3.10',
     install_requires=[
         'mkdocs',
-        'websockets=>=13,<14',
+        'websockets>=13,<14',
     ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
