@@ -275,7 +275,7 @@ class LiveEditPlugin(BasePlugin):
     def on_startup(self, *, command: Literal['build', 'gh-deploy', 'serve'], dirty: bool) -> None:
         self.is_serving = command == 'serve'
 
-    def on_pre_page(self, page: Page, *, config: MkDocsConfig, files: Files) -> Page | None:
+    def on_pre_page(self, page: Page, /, *, config: MkDocsConfig, files: Files) -> Page | None:
         """Here we try to discern the new URL of a page that was just created."""
         if self.new_page["created_file"] is None or (self.new_page["new_url"] is not None):
             return page
@@ -302,7 +302,7 @@ class LiveEditPlugin(BasePlugin):
         server: LiveReloadServer,
         *,
         config: MkDocsConfig,
-        builder: Callable[..., Any]
+        builder: Callable
     ) -> LiveReloadServer | None:
         """Starts the websocket server thread."""
         self.log.info('live-edit websocket server starting')
