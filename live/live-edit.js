@@ -344,7 +344,7 @@ function websocket_connect(hostname, port) {
       label.innerHTML = 'Live Edit:';
       label.className = 'live-edit-label';
       controls.appendChild(label);
-      let article = document.querySelector('article');
+      let article = document.querySelector('[itemprop="articleBody"]');
       if (article) {
         article.prepend(controls);
       }
