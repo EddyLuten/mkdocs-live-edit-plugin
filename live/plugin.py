@@ -300,9 +300,10 @@ class LiveEditPlugin(BasePlugin):
     def on_serve(
         self,
         server: LiveReloadServer,
+        /,
         *,
         config: MkDocsConfig,
-        builder: Callable
+        **_
     ) -> LiveReloadServer | None:
         """Starts the websocket server thread."""
         self.log.info('live-edit websocket server starting')
@@ -320,10 +321,10 @@ class LiveEditPlugin(BasePlugin):
     def on_page_content(
         self,
         html: str,
+        /,
         *,
         page: Page,
-        config: MkDocsConfig,
-        files: Files
+        **_
     ) -> str | None:
         """Injects the live-edit script into the page."""
         if not self.is_serving:
