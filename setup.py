@@ -19,7 +19,7 @@ setup(
     python_requires='>=3.10',
     install_requires=[
         'mkdocs',
-        'websockets',
+        'websockets=>=13,<14',
     ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
