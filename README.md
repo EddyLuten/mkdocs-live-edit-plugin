@@ -68,6 +68,10 @@ A similar mechanism is in place for other operations like renaming and deleting.
 
 ## Changelog
 
+### 0.2.1
+
+**Bug fix:** fixes a compatibility issue reported in [#5](https://github.com/EddyLuten/mkdocs-live-edit-plugin/issues/5). This version also pins the websocket dependency to version 13 for the time being since upgrading would be an undertaking outside the scope of a small patch.
+
 ### 0.2.0
 
 **New Feature:** Creating pages. The plugin now exposes a button that allows you to create a brand new page from any other page.
