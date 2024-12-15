@@ -10,7 +10,7 @@ import string
 import threading
 from logging import Logger, getLogger
 from pathlib import Path
-from typing import Any, Callable, Literal, Optional
+from typing import Literal, Optional
 
 import websockets.client
 import websockets.server
