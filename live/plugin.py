@@ -14,13 +14,13 @@ from typing import Literal, Optional
 
 import websockets.client
 import websockets.server
+from websockets import serve
 from mkdocs.config import config_options
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.livereload import LiveReloadServer
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.files import File, Files
 from mkdocs.structure.pages import Page
-from websockets.server import serve
 
 _REDIRECT_TEMPLATE_STR = """
 <!DOCTYPE html>
@@ -188,7 +188,7 @@ class LiveEditPlugin(BasePlugin):
 
     async def websocket_receiver(
         self,
-        websocket: websockets.server.WebSocketServerProtocol
+        websocket: websockets.ServerConnection
     ):
         """The websocket receiver coroutine."""
         self.log.info('live-edit websocket connected')

@@ -78,41 +78,42 @@ A similar mechanism is in place for other operations like renaming and deleting.
 
 ## Changelog
 
-### 0.3.0
+### 0.3.0 (TBD)
 
-**New Features:**
+**Features and Bug Fixes:**
 
-- `websocket_host` option for specifiying a hostname other than the one MkDocs uses. If not provided, the plugin uses the same host as your MkDocs config (127.0.0.1 by default).
-- Made the plugin spam the browser console less. This can still be re-enabled by setting `debug_mode` to true in the live-edit section of your config file.
+- Feature: `websocket_host` option for specifiying a hostname other than the one MkDocs uses. If not provided, the plugin uses the same host as your MkDocs config (127.0.0.1 by default).
+- Feature: Made the plugin spam the browser console less. This can still be re-enabled by setting `debug_mode` to true in the live-edit section of your config file.
+- Bug Fix: unpinned the websocket dependency and upgraded to the current version.
 
-### 0.2.1
+### 0.2.1 (Dec 15, 2024)
 
 **Bug fix:** fixes a compatibility issue reported in [#5](https://github.com/EddyLuten/mkdocs-live-edit-plugin/issues/5). This version also pins the websocket dependency to version 13 for the time being since upgrading would be an undertaking outside the scope of a small patch.
 
-### 0.2.0
+### 0.2.0 (Mar 6, 2024)
 
 **New Feature:** Creating pages. The plugin now exposes a button that allows you to create a brand new page from any other page.
 
-### 0.1.5
+### 0.1.5 (Feb 7, 2024)
 
 **Bug fix:** fixes an issue where the WebSocket connection would host on localhost over IPv6. See [#3](https://github.com/EddyLuten/mkdocs-live-edit-plugin/issues/3) for context.
 
-### 0.1.4
+### 0.1.4 (Jan 31, 2024)
 
 **Bug fix:** Improved WebSocket connectivity and error handling. Updated the documentation to match.
 
-### 0.1.3
+### 0.1.3 (Jan 29, 2024)
 
 **Bug fix:** The WebSocket connection now honors the hostname as supplied by the browser in `window.location.hostname`.
 
-### 0.1.2
+### 0.1.2 (Jun 23, 2023)
 
 **Bug fix:** include missing data files
 
-### 0.1.1
+### 0.1.1 (Jun 23, 2023)
 
 **Bug fix:** include non-python files in the package
 
-### 0.1.0
+### 0.1.0 (Jun 23, 2023)
 
 Initial release with editing, renaming, and deletion logic in place.
