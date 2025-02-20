@@ -39,20 +39,18 @@ plugins:
 
 [![A video showing how to use v0.1.0](https://img.youtube.com/vi/8aUToGfXGVA/0.jpg)](https://www.youtube.com/watch?v=8aUToGfXGVA)
 
-If, for any reason, you want to override the port that the Live Edit WebSocket is operating on, you can do so by setting the `websockets_port` option for the `live-edit` plugin like so:
-
 ```yml
 plugins:
   - live-edit:
+      # If, for any reason, you want to override the websocket host and/or port
+      # that the Live Edit WebSocket is operating on, you can do so by changing
+      # the following options:
+      websockets_host: hostname # or any IP or hostname you wish
       websockets_port: 9999 # or any other port you want
+      # By default, the plugin doesn't log any information to the browser
+      # developer console. To make the output more verbose, set the debug flag:
+      debug_mode: true
 ```
-
-## TODO
-
-- Creating new pages (not sure how picking directories would work)
-- Moving pages (also not sure about handling directories here)
-- Integration with [mkdocs-categories-plugin](https://github.com/EddyLuten/mkdocs-categories-plugin)
-- Integration with [mkdocs-alias-plugin](https://github.com/EddyLuten/mkdocs-alias-plugin)
 
 ## How Does it Work?
 
@@ -66,7 +64,26 @@ When you edit the contents of a file in the browser, they are sent to the server
 
 A similar mechanism is in place for other operations like renaming and deleting.
 
+## TODO
+
+- Moving pages (also not sure about handling directories here)
+- Integration with [mkdocs-categories-plugin](https://github.com/EddyLuten/mkdocs-categories-plugin)
+- Integration with [mkdocs-alias-plugin](https://github.com/EddyLuten/mkdocs-alias-plugin)
+
+### Troubleshooting
+
+#### ⚠️ I can't use the plugin from a remote machine
+
+✅ Make sure that MkDocs binds to 0.0.0.0 (the default for MkDocs is 127.0.0.1) by specifying the following flag at startup: `mkdocs serve -a 0.0.0.0:8000`. The plugin will inherit this hostname (unless `websockets_host` is set in the plugin options).
+
 ## Changelog
+
+### 0.3.0
+
+**New Features:**
+
+- `websocket_host` option for specifiying a hostname other than the one MkDocs uses. If not provided, the plugin uses the same host as your MkDocs config (127.0.0.1 by default).
+- Made the plugin spam the browser console less. This can still be re-enabled by setting `debug_mode` to true in the live-edit section of your config file.
 
 ### 0.2.1
 

@@ -38,8 +38,10 @@ class LiveEditPlugin(BasePlugin):
     An MkDocs plugin that allows editing pages directly from the browser.
     """
     config_scheme = (
+        ('websockets_host', config_options.Type(string, default=None)),
         ('websockets_port', config_options.Type(int, default=8484)),
         ('websockets_timeout', config_options.Type(int, default=10)),
+        ('debug_mode', config_options.Type(bool, default=False)),
     )
     log: Logger = getLogger(f'mkdocs.plugins.{__name__}')
     server_thread: Optional[threading.Thread] = None
@@ -256,14 +258,18 @@ class LiveEditPlugin(BasePlugin):
 
     async def event_loop(self):
         """The event loop of the websocket server."""
+        host = self.config['websockets_host'] or self.mkdocs_config['dev_addr'].host
+        if host is None:
+            host = '0.0.0.0' # listen on all interfaces, allow connections from anywhere
         async with serve(
             self.websocket_receiver,
-            "127.0.0.1",
+            host,
             self.config['websockets_port']
         ):
             self.log.info(
-                'live-edit websocket server listening on port %s',
-                self.config["websockets_port"]
+                'live-edit websocket server listening on %s:%d',
+                host,
+                self.config['websockets_port']
             )
             await asyncio.Future()
 
@@ -334,7 +340,8 @@ class LiveEditPlugin(BasePlugin):
         page_base_path = Path(page.file.src_path).parent
         preamble = (
             f"const ws_port = {self.config['websockets_port']};\n"
-            f"let page_path = '{page.file.src_path}';\n"
+            f"const debug_mode = {str(self.config['debug_mode']).lower()};\n"
+            f"let page_path = '{page.file.src_uri}';\n"
             f"let page_filename = '{basename}';\n"
             f"let page_base_path = '{page_base_path}';\n"
         )

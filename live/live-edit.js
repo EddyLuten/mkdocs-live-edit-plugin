@@ -1,3 +1,5 @@
+const le_log = !debug_mode ? function () { } : (...args) => console.log('live-edit:', ...args);
+
 // connect to the specified websocket server. retry 3 times with a 1 second delay
 function websocket_connect(hostname, port) {
   return new Promise(function (resolve, reject) {
@@ -10,7 +12,7 @@ function websocket_connect(hostname, port) {
         return;
       }
       --tries;
-      console.log(`Connecting to live-edit server (try ${totalTries - tries} of ${totalTries})...`);
+      le_log(`Connecting to live-edit server at ${url} (try ${totalTries - tries} of ${totalTries})...`);
       let ws = new WebSocket(url);
       ws.onopen = () => resolve(ws);
       ws.addEventListener('error', () => {
@@ -36,10 +38,14 @@ function websocket_connect(hostname, port) {
     infoModal,
     errorMessageDialog;
 
+  le_log('live-edit: page_path:', page_path);
+  le_log('live-edit: page_filename:', page_filename);
+  le_log('live-edit: page_base_path:', page_base_path);
+
   domLoaded.then(() => {
     wsConnected
       .then(wso => {
-        console.info('Connected to live-edit server');
+        le_log('Connected to live-edit server');
         ws = wso;
         ws.onmessage = function (e) {
           let data = JSON.parse(e.data);
@@ -353,7 +359,7 @@ function websocket_connect(hostname, port) {
   }
 
   const initialize = function (message) {
-    console.info(message);
+    le_log(message);
     domLoaded
       .then(() => {
         controls = document.createElement('div');
