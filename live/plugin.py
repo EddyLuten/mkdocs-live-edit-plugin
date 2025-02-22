@@ -58,7 +58,7 @@ class LiveEditPlugin(BasePlugin):
     def __init__(self):
         """Initializes the plugin."""
         parent_dir = Path(__file__).parent
-        js_file = parent_dir / 'live-edit.js'
+        js_file = parent_dir / 'live-edit-2.js'
         with open(js_file, 'r', encoding='utf-8') as file:
             self.js_contents = file.read()
         css_file = parent_dir / 'live-edit.css'

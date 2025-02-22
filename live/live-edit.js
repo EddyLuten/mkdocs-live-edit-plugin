@@ -351,8 +351,15 @@ function websocket_connect(hostname, port) {
       label.className = 'live-edit-label';
       controls.appendChild(label);
       let article = document.querySelector('[itemprop="articleBody"]');
+      if (!article) {
+        article = document.querySelector('div[role="main"]');
+      }
       if (article) {
         article.prepend(controls);
+      } else {
+        le_log('Could not find article or main div to prepend controls');
+        le_log(message);
+        return;
       }
     }
     label.innerHTML = `Live Edit: ${message}`;
@@ -371,6 +378,9 @@ function websocket_connect(hostname, port) {
         controls.appendChild(label);
         // add the controls to the page after the H1
         let article = document.querySelector('article');
+        if (!article) {
+          article = document.querySelector('div[role="main"]');
+        }
         if (article) {
           article.prepend(controls);
           addEditButton();
@@ -379,6 +389,8 @@ function websocket_connect(hostname, port) {
           addNewButton();
           addInfoModal();
           addErrorMessageDialog();
+        } else {
+          le_log('Could not find article or main div to prepend controls');
         }
         sendJson({ 'action': 'ready' });
       })

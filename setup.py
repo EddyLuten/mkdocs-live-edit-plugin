@@ -31,6 +31,6 @@ setup(
     entry_points={
         'mkdocs.plugins': ['live-edit = live.plugin:LiveEditPlugin']
     },
-    data_files=[('live', ['live/live-edit.js', 'live/live-edit.css'])],
+    data_files=[('live', ['live/live-edit-2.js', 'live/live-edit.css'])],
     include_package_data=True,
 )
