@@ -78,13 +78,14 @@ A similar mechanism is in place for other operations like renaming and deleting.
 
 ## Changelog
 
-### 0.3.0 (TBD)
+### 0.3.0 (Feb 21, 2025)
 
 **Features and Bug Fixes:**
 
 - Feature: `websocket_host` option for specifiying a hostname other than the one MkDocs uses. If not provided, the plugin uses the same host as your MkDocs config (127.0.0.1 by default).
 - Feature: Made the plugin spam the browser console less. This can still be re-enabled by setting `debug_mode` to true in the live-edit section of your config file.
 - Bug Fix: unpinned the websocket dependency and upgraded to the current version.
+- Bug Fix: fixed incorrect path variable on Chrome on Windows.
 
 ### 0.2.1 (Dec 15, 2024)
 
