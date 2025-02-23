@@ -337,7 +337,7 @@ class LiveEditPlugin(BasePlugin):
             return html
         basename = os.path.basename(Path(page.file.src_path))
         css = f'<style>{self.css_contents}</style>'
-        page_base_path = Path(page.file.src_path).parent
+        page_base_path = Path(page.file.src_path).parent.as_posix()
         preamble = (
             f"const ws_port = {self.config['websockets_port']};\n"
             f"const debug_mode = {str(self.config['debug_mode']).lower()};\n"
