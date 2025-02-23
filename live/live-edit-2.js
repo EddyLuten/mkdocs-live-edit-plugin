@@ -29,6 +29,7 @@
             editor: 'live-edit-editor',
             hidden: 'live-edit-hidden',
             label: 'live-edit-label',
+            wrapper: 'live-edit-wrapper'
         },
         $ = (query, e = document) => e.querySelector(query),
         $$ = (query, e = document) => e.querySelectorAll(query),
@@ -67,7 +68,9 @@
         domLoaded = new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve)),
         article = null,
         controls = null,
-        editor = null;
+        editorWrapper = null,
+        editor = null,
+        editorControls = null;
 
     const createControls = () => {
         controls = $e('div', { class: classes.controls });
@@ -77,7 +80,6 @@
             class: classes.button,
             title: 'Edit the contents of this page',
             click: (e) => {
-                e.target.disabled = true;
                 send({ action: 'get_contents', 'path': page_path });
             }
         });
@@ -86,11 +88,33 @@
         article.prepend(controls);
     };
 
+    const createEditorControls = () => {
+        editorControls = $e('div', { class: [classes.controls] });
+        let _label = $e('span', { text: 'Live Edit', class: classes.label });
+        let _save = $e('button', {
+            text: '💾 Save',
+            class: classes.button,
+        });
+        let _cancel = $e('button', {
+            text: '❌ Cancel',
+            class: classes.button,
+            click: (e) => {
+                hide(editorWrapper);
+                show(article);
+            }
+        });
+        editorControls.appendChild(_label);
+        editorControls.appendChild(_save);
+        editorControls.appendChild(_cancel);
+        editorWrapper.prepend(editorControls);
+    };
+
     const createEditor = () => {
         // get the classes of the article
         const articleClasses = article.getAttribute('class');
+        editorWrapper = $e('div', { class: [classes.wrapper, articleClasses, classes.hidden] });
         editor = $e('div', {
-            class: [classes.editor, classes.hidden, articleClasses],
+            class: [classes.editor],
             contentEditable: true
         });
         editor.addEventListener('input', () => {
@@ -134,7 +158,9 @@
         });
 
         // insert the editor after the article
-        article.parentNode.appendChild(editor);
+        editorWrapper.appendChild(editor);
+        article.parentNode.appendChild(editorWrapper);
+        createEditorControls();
     };
 
     const initialize = (_data) => {
@@ -152,7 +178,7 @@
         if (!editor) return;
         editor.innerHTML = data.contents;
         hide(article);
-        show(editor);
+        show(editorWrapper);
     };
 
     domLoaded.then(() => {

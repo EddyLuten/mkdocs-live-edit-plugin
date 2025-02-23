@@ -92,6 +92,9 @@ div.live-edit-controls {
   width: 100%;
 }
 
+div.live-edit-wrapper {
+}
+
 .live-edit-label {
   display: inline-block;
   text-align: right;
