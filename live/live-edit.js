@@ -341,6 +341,14 @@ function websocket_connect(hostname, port) {
     document.body.appendChild(errorMessageDialog);
   }
 
+  const getArticle = function () {
+    let article = document.querySelector(article_selector);
+    if (!article) article = document.querySelector('[itemprop="articleBody"]');
+    if (!article) article = document.querySelector('div[role="main"]');
+    if (!article) article = document.querySelector('article');
+    return article;
+  };
+
   const showErrorMessage = function (message) {
     if (!controls) {
       controls = document.createElement('div');
@@ -350,9 +358,11 @@ function websocket_connect(hostname, port) {
       label.innerHTML = 'Live Edit:';
       label.className = 'live-edit-label';
       controls.appendChild(label);
-      let article = document.querySelector('[itemprop="articleBody"]');
+      let article = getArticle();
       if (article) {
         article.prepend(controls);
+      } else {
+        console.error('Could not find article element to prepend controls!');
       }
     }
     label.innerHTML = `Live Edit: ${message}`;
@@ -370,7 +380,7 @@ function websocket_connect(hostname, port) {
         label.className = 'live-edit-label';
         controls.appendChild(label);
         // add the controls to the page after the H1
-        let article = document.querySelector('article');
+        let article = getArticle();
         if (article) {
           article.prepend(controls);
           addEditButton();
@@ -379,8 +389,10 @@ function websocket_connect(hostname, port) {
           addNewButton();
           addInfoModal();
           addErrorMessageDialog();
+          sendJson({ 'action': 'ready' });
+        } else {
+          console.error('Could not find article element to prepend controls!');
         }
-        sendJson({ 'action': 'ready' });
       })
       .catch((e) => {
         console.error(e);

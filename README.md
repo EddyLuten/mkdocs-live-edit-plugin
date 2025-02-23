@@ -48,8 +48,14 @@ plugins:
       websockets_host: hostname # or any IP or hostname you wish
       websockets_port: 9999 # or any other port you want
       # By default, the plugin doesn't log any information to the browser
-      # developer console. To make the output more verbose, set the debug flag:
+      # developer console other than errors. To make the output more verbose,
+      # set the debug flag:
       debug_mode: true
+      # If the plugin complains that the article element could not be found,
+      # this option allow you to specify which selector to use to find it.
+      # This string is directly fed into the document.querySelector function:
+      # https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector
+      article_selector: 'div.my-custom-class'
 ```
 
 ## How Does it Work?
@@ -76,7 +82,18 @@ A similar mechanism is in place for other operations like renaming and deleting.
 
 ✅ Make sure that MkDocs binds to 0.0.0.0 (the default for MkDocs is 127.0.0.1) by specifying the following flag at startup: `mkdocs serve -a 0.0.0.0:8000`. The plugin will inherit this hostname (unless `websockets_host` is set in the plugin options).
 
+#### ⚠️ "Could not find article element to prepend controls!"
+
+The plugin was unable to automatically determine the element which houses the text of your article. You can use the `article_selector` setting to provide the correct selector syntaxt used by the [`querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector) function to find your article. This should be the parent element of your article's H1 tag, containing all of your article's text.
+
 ## Changelog
+
+### 0.3.1 (Feb 23, 2025)
+
+**Bug Fixes:**
+
+- Fixes an issue on Windows where the file's path name would populate using underscores rather than slashes. Fixes [#11](https://github.com/EddyLuten/mkdocs-live-edit-plugin/issues/5). Thank you, @ZeeWanderer for the contributing the fix!
+- Allows for the setting of an `article_selector` option to specify which element on the page contains the page's text. This should greatly improve compatibility with just about any theme.
 
 ### 0.3.0 (Feb 21, 2025)
 

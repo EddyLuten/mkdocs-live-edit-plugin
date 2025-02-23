@@ -42,6 +42,7 @@ class LiveEditPlugin(BasePlugin):
         ('websockets_port', config_options.Type(int, default=8484)),
         ('websockets_timeout', config_options.Type(int, default=10)),
         ('debug_mode', config_options.Type(bool, default=False)),
+        ('article_selector', config_options.Type(string, default=None)),
     )
     log: Logger = getLogger(f'mkdocs.plugins.{__name__}')
     server_thread: Optional[threading.Thread] = None
@@ -345,4 +346,8 @@ class LiveEditPlugin(BasePlugin):
             f"let page_filename = '{basename}';\n"
             f"let page_base_path = '{page_base_path}';\n"
         )
+        if self.config['article_selector']:
+            preamble += f"let article_selector = '{self.config['article_selector']}';\n"
+        else:
+            preamble += "let article_selector = null;\n"
         return f'{css}\n{html}<script>{preamble}\n{self.js_contents}</script>'
