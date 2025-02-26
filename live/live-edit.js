@@ -82,6 +82,7 @@ function websocket_connect(hostname, port) {
   }
 
   const enterEditMode = function () {
+    controls.classList.add('live-edit-editing');
     editButton.classList.add('live-edit-hidden');
     editSource.classList.remove('live-edit-hidden');
     saveButton.classList.remove('live-edit-hidden');
@@ -89,6 +90,7 @@ function websocket_connect(hostname, port) {
   }
 
   const exitEditMode = function () {
+    controls.classList.remove('live-edit-editing');
     editButton.classList.remove('live-edit-hidden');
     editSource.classList.add('live-edit-hidden');
     saveButton.classList.add('live-edit-hidden');
