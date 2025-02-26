@@ -205,12 +205,14 @@ function websocket_connect(hostname, port) {
     });
     // add a save button
     saveButton = document.createElement('button');
+    saveButton.accessKey = 's';
     saveButton.innerHTML = 'Save';
     saveButton.classList.add('live-edit-button');
     saveButton.classList.add('live-edit-save-button');
     saveButton.addEventListener('click', onSavePageContents);
     // add a cancel button
     cancelButton = document.createElement('button');
+    cancelButton.accessKey = 'c';
     cancelButton.innerHTML = 'Cancel';
     cancelButton.classList.add('live-edit-button');
     cancelButton.classList.add('live-edit-cancel-button');
@@ -275,6 +277,7 @@ function websocket_connect(hostname, port) {
   const addNewButton = function () {
     // add a button
     newButton = document.createElement('button');
+    newButton.accessKey = 'n';
     newButton.innerHTML = '📄 New';
     newButton.className = 'live-edit-button align-right';
     newButton.title = 'Create a new page';
@@ -285,6 +288,7 @@ function websocket_connect(hostname, port) {
   const addEditButton = function () {
     // add a button
     editButton = document.createElement('button');
+    editButton.accessKey = 'e';
     editButton.innerHTML = '✏️ Edit';
     editButton.className = 'live-edit-button';
     editButton.title = 'Edit the contents of this page';
@@ -295,6 +299,7 @@ function websocket_connect(hostname, port) {
   const addRenameButton = function () {
     // add a button
     renameButton = document.createElement('button');
+    renameButton.accessKey = 'r';
     renameButton.innerHTML = '📝 Rename';
     renameButton.className = 'live-edit-button';
     renameButton.title = 'Change the filename of this page';
@@ -305,6 +310,7 @@ function websocket_connect(hostname, port) {
   const addDeleteButton = function () {
     // add a button
     deleteButton = document.createElement('button');
+    deleteButton.accessKey = 'd';
     deleteButton.innerHTML = '🗑️ Delete';
     deleteButton.className = 'live-edit-button';
     deleteButton.title = 'Delete this page';
