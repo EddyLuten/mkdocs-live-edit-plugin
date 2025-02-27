@@ -26,7 +26,6 @@ function websocket_connect(hostname, port) {
 (function () {
   let
     ws = undefined,
-    wsConnected = websocket_connect(window.location.hostname, ws_port),
     domLoaded = new Promise(function (resolve) {
       document.addEventListener('DOMContentLoaded', resolve);
     }),
@@ -43,6 +42,7 @@ function websocket_connect(hostname, port) {
   le_log('live-edit: page_base_path:', page_base_path);
 
   domLoaded.then(() => {
+    const wsConnected = websocket_connect(window.location.hostname, ws_port);
     wsConnected
       .then(wso => {
         le_log('Connected to live-edit server');
@@ -82,6 +82,7 @@ function websocket_connect(hostname, port) {
   }
 
   const enterEditMode = function () {
+    controls.classList.add('live-edit-editing');
     editButton.classList.add('live-edit-hidden');
     editSource.classList.remove('live-edit-hidden');
     saveButton.classList.remove('live-edit-hidden');
@@ -89,6 +90,7 @@ function websocket_connect(hostname, port) {
   }
 
   const exitEditMode = function () {
+    controls.classList.remove('live-edit-editing');
     editButton.classList.remove('live-edit-hidden');
     editSource.classList.add('live-edit-hidden');
     saveButton.classList.add('live-edit-hidden');
@@ -205,12 +207,14 @@ function websocket_connect(hostname, port) {
     });
     // add a save button
     saveButton = document.createElement('button');
+    saveButton.accessKey = 's';
     saveButton.innerHTML = 'Save';
     saveButton.classList.add('live-edit-button');
     saveButton.classList.add('live-edit-save-button');
     saveButton.addEventListener('click', onSavePageContents);
     // add a cancel button
     cancelButton = document.createElement('button');
+    cancelButton.accessKey = 'c';
     cancelButton.innerHTML = 'Cancel';
     cancelButton.classList.add('live-edit-button');
     cancelButton.classList.add('live-edit-cancel-button');
@@ -275,6 +279,7 @@ function websocket_connect(hostname, port) {
   const addNewButton = function () {
     // add a button
     newButton = document.createElement('button');
+    newButton.accessKey = 'n';
     newButton.innerHTML = '📄 New';
     newButton.className = 'live-edit-button align-right';
     newButton.title = 'Create a new page';
@@ -285,6 +290,7 @@ function websocket_connect(hostname, port) {
   const addEditButton = function () {
     // add a button
     editButton = document.createElement('button');
+    editButton.accessKey = 'e';
     editButton.innerHTML = '✏️ Edit';
     editButton.className = 'live-edit-button';
     editButton.title = 'Edit the contents of this page';
@@ -295,6 +301,7 @@ function websocket_connect(hostname, port) {
   const addRenameButton = function () {
     // add a button
     renameButton = document.createElement('button');
+    renameButton.accessKey = 'r';
     renameButton.innerHTML = '📝 Rename';
     renameButton.className = 'live-edit-button';
     renameButton.title = 'Change the filename of this page';
@@ -305,6 +312,7 @@ function websocket_connect(hostname, port) {
   const addDeleteButton = function () {
     // add a button
     deleteButton = document.createElement('button');
+    deleteButton.accessKey = 'd';
     deleteButton.innerHTML = '🗑️ Delete';
     deleteButton.className = 'live-edit-button';
     deleteButton.title = 'Delete this page';
