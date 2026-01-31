@@ -5,7 +5,12 @@ function websocket_connect(hostname, port) {
   return new Promise(function (resolve, reject) {
     const totalTries = 3;
     let tries = totalTries;
-    const url = `ws://${hostname}:${port}`;
+    let url = `ws://${hostname}:${port}`;
+    
+    if (window.location.protocol === 'https:') {
+      url = `wss://${hostname}:${port}`;
+    }
+    
     const getws = function () {
       if (tries <= 0) {
         reject('Failed to connect to the live-edit server');
