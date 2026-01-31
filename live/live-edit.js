@@ -5,10 +5,10 @@ function websocket_connect(hostname, port) {
   return new Promise(function (resolve, reject) {
     const totalTries = 3;
     let tries = totalTries;
-    let url = `ws://${hostname}:${port}`;
+    let url = `ws://${hostname}:${port}/ws`;
     
     if (window.location.protocol === 'https:') {
-      url = `wss://${hostname}:${port}`;
+      url = `wss://${hostname}:${port}/ws`;
     }
     
     const getws = function () {
