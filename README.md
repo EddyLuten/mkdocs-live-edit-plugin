@@ -87,7 +87,7 @@ A similar mechanism is in place for other operations like renaming and deleting.
 
 #### ⚠️ "Could not find article element to prepend controls!"
 
-The plugin was unable to automatically determine the element which houses the text of your article. You can use the `article_selector` setting to provide the correct selector syntaxt used by the [`querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector) function to find your article. This should be the parent element of your article's H1 tag, containing all of your article's text.
+The plugin was unable to automatically determine the element which houses the text of your article. You can use the `article_selector` setting to provide the correct selector syntax used by the [`querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector) function to find your article. This should be the parent element of your article's H1 tag, containing all of your article's text.
 
 #### ⚠️ Live-edit doesn't work with mkdocs-monorepo-plugin (or similar plugins)
 
@@ -100,6 +100,15 @@ plugins:
 ```
 
 ## Changelog
+
+### 0.4.0 (Mar 03, 2026)
+
+**Features and Bug Fixes:**
+
+- Feature: support for custom documentation file directories through the new option `user_docs_dir`
+- Bug fix: fix for a TypeError in the plugin config
+
+Thank you, @samrocketman, for both of these changes!
 
 ### 0.3.1 (Feb 23, 2025)
 
