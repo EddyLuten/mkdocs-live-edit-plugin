@@ -56,6 +56,9 @@ plugins:
       # This string is directly fed into the document.querySelector function:
       # https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector
       article_selector: 'div.my-custom-class'
+      # Some plugins (e.g. mkdocs-monorepo-plugin) create a temporary docs_dir
+      # which breaks live-edit. Use user_docs_dir to specify the real docs path:
+      user_docs_dir: /path/to/real/user/docs
 ```
 
 ## How Does it Work?
@@ -85,6 +88,16 @@ A similar mechanism is in place for other operations like renaming and deleting.
 #### ⚠️ "Could not find article element to prepend controls!"
 
 The plugin was unable to automatically determine the element which houses the text of your article. You can use the `article_selector` setting to provide the correct selector syntaxt used by the [`querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector) function to find your article. This should be the parent element of your article's H1 tag, containing all of your article's text.
+
+#### ⚠️ Live-edit doesn't work with mkdocs-monorepo-plugin (or similar plugins)
+
+Some plugins create a temporary `docs_dir` which breaks live-edit. Use the `user_docs_dir` option to specify the real path to your documentation source files:
+
+```yml
+plugins:
+  - live-edit:
+      user_docs_dir: /path/to/real/user/docs
+```
 
 ## Changelog
 

@@ -42,6 +42,7 @@ class LiveEditPlugin(BasePlugin):
         ('websockets_port', config_options.Type(int, default=8484)),
         ('websockets_timeout', config_options.Type(int, default=10)),
         ('debug_mode', config_options.Type(bool, default=False)),
+        ('user_docs_dir', config_options.Type(str, default=None)),
         ('article_selector', config_options.Type(str, default=None)),
     )
     log: Logger = getLogger(f'mkdocs.plugins.{__name__}')
@@ -56,6 +57,15 @@ class LiveEditPlugin(BasePlugin):
         "new_url": None,
     }
 
+    def _get_docs_dir(self) -> Path:
+        """Returns the effective docs_dir: user_docs_dir if set, otherwise cfg['docs_dir']."""
+        if self.config.get('user_docs_dir'):
+            return Path(self.config['user_docs_dir'])
+        docs_dir = self.mkdocs_config.get('docs_dir')
+        if docs_dir is None:
+            raise TypeError('docs_dir is None')
+        return Path(docs_dir)
+
     def __init__(self):
         """Initializes the plugin."""
         parent_dir = Path(__file__).parent
@@ -68,26 +78,24 @@ class LiveEditPlugin(BasePlugin):
 
     def read_file_contents(self, path: str) -> str:
         """Reads the contents of a page from the filesystem."""
-        with open(Path(self.mkdocs_config['docs_dir']) / path, 'r', encoding='utf-8') as file:
+        with open(self._get_docs_dir() / path, 'r', encoding='utf-8') as file:
             return file.read()
 
     def write_file_contents(self, path: str, contents: str) -> None:
         """Writes the contents of a page to the filesystem."""
-        with open(Path(self.mkdocs_config['docs_dir']) / path, 'w', encoding='utf-8') as file:
+        with open(self._get_docs_dir() / path, 'w', encoding='utf-8') as file:
             file.write(contents)
 
     def rename_file(self, old_filepath: str, new_filename: str) -> str:
         """Renames a file on the filesystem."""
         try:
             cfg = self.mkdocs_config
-            if cfg['docs_dir'] is None:
-                raise TypeError('docs_dir is None')
-            docs_dir = Path(cfg['docs_dir'])
+            docs_dir = self._get_docs_dir()
             old_path = docs_dir / old_filepath
             new_path = old_path.rename(old_path.parent / new_filename)
             new_page = Page(None, File(
                 str(new_path.relative_to(docs_dir)),
-                cfg['docs_dir'],
+                str(docs_dir),
                 cfg['site_dir'],
                 cfg['use_directory_urls']
             ), cfg)
@@ -115,10 +123,7 @@ class LiveEditPlugin(BasePlugin):
     def delete_file(self, path: str) -> str:
         """Deletes a file on the filesystem."""
         try:
-            cfg = self.mkdocs_config
-            if cfg['docs_dir'] is None:
-                raise TypeError('docs_dir is None')
-            docs_dir = Path(cfg['docs_dir'])
+            docs_dir = self._get_docs_dir()
             (docs_dir / path).unlink()
             return json.dumps({
                 'action':   'delete_file',
@@ -163,7 +168,7 @@ class LiveEditPlugin(BasePlugin):
     def create_new_file(self, path: str, title: str) -> str:
         """Creates a new file and returns a JSON string describing the result."""
         try:
-            new_path = Path(self.mkdocs_config['docs_dir']) / path
+            new_path = self._get_docs_dir() / path
             # ensure the parent directory structure exists
             if not new_path.parent.exists():
                 new_path.parent.mkdir(parents=True)
@@ -286,7 +291,7 @@ class LiveEditPlugin(BasePlugin):
         """Here we try to discern the new URL of a page that was just created."""
         if self.new_page["created_file"] is None or (self.new_page["new_url"] is not None):
             return page
-        path = Path(self.mkdocs_config['docs_dir']) / page.file.src_path
+        path = self._get_docs_dir() / page.file.src_path
         if Path.samefile(path, self.new_page["created_file"]):
             self.log.info('new page created: %s', page.abs_url)
             self.new_page["new_url"] = page.abs_url
