@@ -38,11 +38,11 @@ class LiveEditPlugin(BasePlugin):
     An MkDocs plugin that allows editing pages directly from the browser.
     """
     config_scheme = (
-        ('websockets_host', config_options.Type(string, default=None)),
+        ('websockets_host', config_options.Type(str, default=None)),
         ('websockets_port', config_options.Type(int, default=8484)),
         ('websockets_timeout', config_options.Type(int, default=10)),
         ('debug_mode', config_options.Type(bool, default=False)),
-        ('article_selector', config_options.Type(string, default=None)),
+        ('article_selector', config_options.Type(str, default=None)),
     )
     log: Logger = getLogger(f'mkdocs.plugins.{__name__}')
     server_thread: Optional[threading.Thread] = None
