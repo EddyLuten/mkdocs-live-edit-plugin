@@ -101,6 +101,16 @@ plugins:
 
 ## Changelog
 
+### 0.4.1 (Mar 04, 2026)
+
+**Bug Fixes**
+
+- Bug Fix: fix for a potential race condition when initializing the websocket connection.
+- Bug Fix: fix for the CSS class `live-edit-editing` remaining when exiting edit mode.
+- Minor feature: support for button access keys.
+
+Thank you, @tim-janik, for these changes!
+
 ### 0.4.0 (Mar 03, 2026)
 
 **Features and Bug Fixes:**
