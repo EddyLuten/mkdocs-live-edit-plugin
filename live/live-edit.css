@@ -7,12 +7,12 @@
   height: 50vh;
   resize: vertical;
   /** make it readable **/
-  font-family: monospace;
+  font-family: var(--md-code-font-family, monospace);
   font-size: .8rem;
   line-height: 1.5;
-  color: #333;
-  background: #fff;
-  border: 1px solid #ccc;
+  color: var(--md-default-fg-color, #333);
+  background: var(--md-default-bg-color, #fff);
+  border: 1px solid var(--md-default-fg-color--lightest, #ccc);
   border-radius: 3px;
   padding: 5px 10px;
   margin: 5px;
@@ -44,15 +44,20 @@ button.live-edit-pencil-button {
 
 button.live-edit-button {
   cursor: pointer;
-  background: #fff;
-  border: 1px solid #ccc;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 3px;
   padding: 5px 10px;
   margin: 0 5px;
   font-size: .8rem;
   line-height: 1.5;
-  color: #333;
+  color: var(--md-primary-bg-color, #fff);
   outline: none;
+  transition: background .2s;
+}
+
+button.live-edit-button:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 button.live-edit-button.align-right {
@@ -65,15 +70,28 @@ button.live-edit-save-button {
   color: #fff;
 }
 
+button.live-edit-save-button:hover {
+  background: #4cae4c;
+}
+
 button.live-edit-cancel-button {
   background: #d9534f;
   border-color: #d43f3a;
   color: #fff;
 }
 
+button.live-edit-cancel-button:hover {
+  background: #d43f3a;
+}
+
 div.live-edit-controls {
-  background-color: #fff2dc;
-  border: 1px solid #f0c36d;
+  background: linear-gradient(
+    to bottom,
+    var(--md-primary-fg-color, #fff2dc),
+    var(--md-footer-bg-color, #f0c36d)
+  );
+  border: 1px solid var(--md-primary-fg-color--dark, #f0c36d);
+  color: var(--md-primary-bg-color, inherit);
   border-radius: 3px;
   padding: 5px 10px;
   margin: 10px 0;
@@ -87,6 +105,7 @@ div.live-edit-controls {
   text-align: right;
   margin-right: 10px;
   font-size: .8rem;
+  color: var(--md-primary-bg-color, inherit);
 }
 
 .live-edit-modal {
@@ -105,8 +124,8 @@ div.live-edit-controls {
 }
 
 .live-edit-info-modal {
-  background-color: #fff2dc;
-  border: 1px solid #f0c36d;
+  background-color: var(--md-default-bg-color--light, #fff2dc);
+  border: 1px solid var(--md-default-fg-color--lightest, #f0c36d);
 }
 
 .live-edit-error-message-dialog {

@@ -1,5 +1,71 @@
 const le_log = !debug_mode ? function () { } : (...args) => console.log('live-edit:', ...args);
 
+function _detectThemeVars() {
+  var cs = getComputedStyle(document.documentElement);
+  if (cs.getPropertyValue('--md-primary-fg-color').trim()) return;
+
+  function _parseRgb(str) {
+    if (!str) return null;
+    var m = str.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+    return m ? { r: +m[1], g: +m[2], b: +m[3] } : null;
+  }
+  function _lum(r, g, b) {
+    var a = [r, g, b].map(function (v) {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+  }
+  function _darken(rgb, f) {
+    var s = 1 - (f || 0.15);
+    return 'rgb(' + Math.round(rgb.r * s) + ',' + Math.round(rgb.g * s) + ',' + Math.round(rgb.b * s) + ')';
+  }
+  function _lighten(rgb, f) {
+    f = f || 0.15;
+    return 'rgb(' +
+      Math.round(rgb.r + (255 - rgb.r) * f) + ',' +
+      Math.round(rgb.g + (255 - rgb.g) * f) + ',' +
+      Math.round(rgb.b + (255 - rgb.b) * f) + ')';
+  }
+  function _alpha(rgb, a) {
+    return 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + a + ')';
+  }
+  function _isLight(rgb) {
+    return rgb && _lum(rgb.r, rgb.g, rgb.b) > 0.4;
+  }
+
+  var root = document.documentElement;
+  var navbar = document.body.children[0];
+  if (navbar && navbar.nodeType === 1) {
+    var navCs = getComputedStyle(navbar);
+    var navBgRgb = _parseRgb(navCs.backgroundColor);
+    var navFgRgb = _parseRgb(navCs.color);
+    if (navBgRgb) {
+      root.style.setProperty('--md-primary-fg-color', navCs.backgroundColor);
+      root.style.setProperty('--md-primary-fg-color--dark', _darken(navBgRgb, 0.15));
+      root.style.setProperty('--md-footer-bg-color', _darken(navBgRgb, 0.1));
+    }
+    if (navFgRgb) {
+      root.style.setProperty('--md-primary-bg-color', navCs.color);
+    }
+  }
+
+  var bodyCs = getComputedStyle(document.body);
+  var bodyBgRgb = _parseRgb(bodyCs.backgroundColor);
+  var bodyFgRgb = _parseRgb(bodyCs.color);
+  if (bodyBgRgb) {
+    root.style.setProperty('--md-default-bg-color', bodyCs.backgroundColor);
+    root.style.setProperty('--md-default-bg-color--light',
+      _isLight(bodyBgRgb) ? _darken(bodyBgRgb, 0.04) : _lighten(bodyBgRgb, 0.06));
+  }
+  if (bodyFgRgb) {
+    root.style.setProperty('--md-default-fg-color', bodyCs.color);
+    root.style.setProperty('--md-default-fg-color--lightest', _alpha(bodyFgRgb, 0.12));
+  }
+
+  root.style.setProperty('--md-code-font-family', bodyCs.fontFamily || 'monospace');
+}
+
 // connect to the specified websocket server. retry 3 times with a 1 second delay
 function websocket_connect(hostname, port) {
   return new Promise(function (resolve, reject) {
@@ -380,6 +446,7 @@ function websocket_connect(hostname, port) {
     le_log(message);
     domLoaded
       .then(() => {
+        _detectThemeVars();
         controls = document.createElement('div');
         controls.className = 'live-edit-controls';
         // add a label to the controls
