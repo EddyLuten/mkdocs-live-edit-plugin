@@ -1,6 +1,14 @@
 # mkdocs-live-edit-plugin
 
-[![PyPI version](https://badge.fury.io/py/mkdocs-live-edit-plugin.svg)](https://pypi.org/project/mkdocs-live-edit-plugin/)  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![example workflow](https://github.com/eddyluten/mkdocs-live-edit-plugin/actions/workflows/pylint.yml/badge.svg) [![Downloads](https://pepy.tech/badge/mkdocs-live-edit-plugin)](https://pepy.tech/project/mkdocs-live-edit-plugin)
+[![PyPI version](https://badge.fury.io/py/mkdocs-live-edit-plugin.svg)](https://pypi.org/project/mkdocs-live-edit-plugin/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Downloads](https://pepy.tech/badge/mkdocs-live-edit-plugin)](https://pepy.tech/project/mkdocs-live-edit-plugin)
+[![CI Status](https://codeberg.org/luten/mkdocs-live-edit-plugin/badges/workflows/ci.yml/badge.svg)](https://codeberg.org/luten/mkdocs-live-edit-plugin/actions?workflow=ci.yml)
+
+> [!IMPORTANT]
+> This repository has moved to [Codeberg](https://codeberg.org/luten/mkdocs-live-edit-plugin).
+>
+> The GitHub **mirror** is synced automatically, but please file issues and pull requests on Codeberg. See the [CONTRIBUTING](CONTRIBUTING.md) file for details. All existing issues and pull requests have also migrated there.
 
 mkdocs-live-edit-plugin is an MkDocs plugin that allows editing pages directly from the browser.
 
@@ -18,7 +26,7 @@ Some basic editor shortcuts available while editing:
 - Alt+S/Opt+S toggles your selection to be ~~Strikethrough~~
 - Ctrl+S/Cmd+S to save your changes
 
-If you like this plugin, you'll probably also like [mkdocs-categories-plugin](https://github.com/EddyLuten/mkdocs-categories-plugin) and [mkdocs-alias-plugin](https://github.com/EddyLuten/mkdocs-alias-plugin).
+If you like this plugin, you'll probably also like [mkdocs-categories-plugin](https://categories.luten.dev/) and [mkdocs-alias-plugin](https://alias.luten.dev/).
 
 ## Installation
 
@@ -76,20 +84,20 @@ A similar mechanism is in place for other operations like renaming and deleting.
 ## TODO
 
 - Moving pages (also not sure about handling directories here)
-- Integration with [mkdocs-categories-plugin](https://github.com/EddyLuten/mkdocs-categories-plugin)
-- Integration with [mkdocs-alias-plugin](https://github.com/EddyLuten/mkdocs-alias-plugin)
+- Integration with [mkdocs-categories-plugin](https://categories.luten.dev/)
+- Integration with [mkdocs-alias-plugin](https://alias.luten.dev/)
 
 ### Troubleshooting
 
-#### ⚠️ I can't use the plugin from a remote machine
+#### I can't use the plugin from a remote machine
 
-✅ Make sure that MkDocs binds to 0.0.0.0 (the default for MkDocs is 127.0.0.1) by specifying the following flag at startup: `mkdocs serve -a 0.0.0.0:8000`. The plugin will inherit this hostname (unless `websockets_host` is set in the plugin options).
+Make sure that MkDocs binds to 0.0.0.0 (the default for MkDocs is 127.0.0.1) by specifying the following flag at startup: `mkdocs serve -a 0.0.0.0:8000`. The plugin will inherit this hostname (unless `websockets_host` is set in the plugin options).
 
-#### ⚠️ "Could not find article element to prepend controls!"
+#### "Could not find article element to prepend controls!"
 
 The plugin was unable to automatically determine the element which houses the text of your article. You can use the `article_selector` setting to provide the correct selector syntax used by the [`querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector) function to find your article. This should be the parent element of your article's H1 tag, containing all of your article's text.
 
-#### ⚠️ Live-edit doesn't work with mkdocs-monorepo-plugin (or similar plugins)
+#### Live-edit doesn't work with mkdocs-monorepo-plugin (or similar plugins)
 
 Some plugins create a temporary `docs_dir` which breaks live-edit. Use the `user_docs_dir` option to specify the real path to your documentation source files:
 
@@ -103,7 +111,7 @@ plugins:
 
 ### 0.4.1 (Mar 04, 2026)
 
-**Bug Fixes**
+**Bug Fixes:**
 
 - Bug Fix: fix for a potential race condition when initializing the websocket connection.
 - Bug Fix: fix for the CSS class `live-edit-editing` remaining when exiting edit mode.
@@ -124,7 +132,7 @@ Thank you, @samrocketman, for both of these changes!
 
 **Bug Fixes:**
 
-- Fixes an issue on Windows where the file's path name would populate using underscores rather than slashes. Fixes [#11](https://github.com/EddyLuten/mkdocs-live-edit-plugin/issues/5). Thank you, @ZeeWanderer for the contributing the fix!
+- Fixes an issue on Windows where the file's path name would populate using underscores rather than slashes. Fixes [#11](https://codeberg.org/luten/mkdocs-live-edit-plugin/issues/5). Thank you, @ZeeWanderer for the contributing the fix!
 - Allows for the setting of an `article_selector` option to specify which element on the page contains the page's text. This should greatly improve compatibility with just about any theme.
 
 ### 0.3.0 (Feb 21, 2025)
@@ -138,7 +146,7 @@ Thank you, @samrocketman, for both of these changes!
 
 ### 0.2.1 (Dec 15, 2024)
 
-**Bug fix:** fixes a compatibility issue reported in [#5](https://github.com/EddyLuten/mkdocs-live-edit-plugin/issues/5). This version also pins the websocket dependency to version 13 for the time being since upgrading would be an undertaking outside the scope of a small patch.
+**Bug fix:** fixes a compatibility issue reported in [#5](https://codeberg.org/luten/mkdocs-live-edit-plugin/issues/5). This version also pins the websocket dependency to version 13 for the time being since upgrading would be an undertaking outside the scope of a small patch.
 
 ### 0.2.0 (Mar 6, 2024)
 
@@ -146,7 +154,7 @@ Thank you, @samrocketman, for both of these changes!
 
 ### 0.1.5 (Feb 7, 2024)
 
-**Bug fix:** fixes an issue where the WebSocket connection would host on localhost over IPv6. See [#3](https://github.com/EddyLuten/mkdocs-live-edit-plugin/issues/3) for context.
+**Bug fix:** fixes an issue where the WebSocket connection would host on localhost over IPv6. See [#3](https://codeberg.org/luten/mkdocs-live-edit-plugin/issues/3) for context.
 
 ### 0.1.4 (Jan 31, 2024)
 

@@ -7,14 +7,14 @@ long_description = (this_directory / 'README.md').read_text()
 
 setup(
     name='mkdocs-live-edit-plugin',
-    version='0.4.1',
+    version='0.4.2',
     description='An MkDocs plugin that allows editing pages directly from the browser.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords='mkdocs python markdown editing authoring wiki server',
-    url='https://github.com/eddyluten/mkdocs-live-edit-plugin',
+    url='https://live-edit.luten.dev/',
     author='Eddy Luten',
-    author_email='eddyluten@gmail.com',
+    author_email='eluten@pm.me',
     license='MIT',
     python_requires='>=3.10',
     install_requires=[
